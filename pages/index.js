@@ -1,6 +1,8 @@
 import Head from 'next/head'
+import prisma from 'lib/prisma'
+import { getItems } from 'lib/data'
 
-export default function Home() {
+export default function Home({ restaurants, hotels, thingsToDo}) {
   return (
     <div>
       <Head>
@@ -12,38 +14,61 @@ export default function Home() {
       <div className='text-center'>
         <h1 className='mt-10 font-extrabold text-2xl'>The Best in Town</h1>
 
-        <div className='grid md:grid-cols-3'>
+        <div className='flex flex-col md:grid md:grid-cols-3'>
+          {restaurants && (
           <div>
             <h2 className='mt-10 font-bold'>Restaurants</h2>
 
             <ol className='mt-4 list-inside list-decimal'>
-              <li>Restaurant 1</li>
-              <li>Restaurant 2</li>
-              <li>Restaurant 3</li>
+              {restaurants.map((item, index) => (
+                <li key={index}>{item.name}</li>
+              ))}
             </ol>
           </div>
+          )}
 
+          {hotels && (
           <div>
             <h2 className='mt-10 font-bold'>Hotels</h2>
 
             <ol className='mt-4 list-inside list-decimal'>
-              <li>Hotel 1</li>
-              <li>Hotel 2</li>
-              <li>Hotel 3</li>
+              {hotels.map((item, index) => (
+                <li key={index}>{item.name}</li>
+              ))}
             </ol>
           </div>
+          )}
           
+          {thingsToDo && (
           <div>
-            <h2 className='mt-10 font-bold'>This to do</h2>
+            <h2 className='mt-10 font-bold'>Things To Do</h2>
 
             <ol className='mt-4 list-inside list-decimal'>
-              <li>Thing 1</li>
-              <li>Thing 2</li>
-              <li>Thing 3</li>
+              {thingsToDo.map((item, index) => (
+                <li key={index}>{item.name}</li>
+              ))}
             </ol>
-          </div>          
+          </div>
+          )}         
         </div>
       </div>
     </div>
   )
+}
+
+
+
+export async function getServerSideProps() {
+  const restaurants = await getItems(prisma, 'restaurants')
+  const hotels = await getItems(prisma, 'hotel')
+  const thingsToDo = await getItems(prisma, 'thing-to-do')
+  console.log(thingsToDo)
+
+  return {
+    props: {
+      restaurants,
+      hotels,
+      thingsToDo,
+    }
+  }
 }
