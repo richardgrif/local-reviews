@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import prisma from 'lib/prisma'
 import { getItems } from 'lib/data'
 
@@ -21,7 +22,9 @@ export default function Home({ restaurants, hotels, thingsToDo}) {
 
             <ol className='mt-4 list-inside list-decimal'>
               {restaurants.map((item, index) => (
-                <li key={index}>{item.name}</li>
+                <Link href={`/${item.id}`} key={index}>
+                  <a className='block cursor-pointer'>{item.name}</a>
+                </Link>
               ))}
             </ol>
           </div>
@@ -33,7 +36,9 @@ export default function Home({ restaurants, hotels, thingsToDo}) {
 
             <ol className='mt-4 list-inside list-decimal'>
               {hotels.map((item, index) => (
-                <li key={index}>{item.name}</li>
+                <Link href={`/${item.id}`} key={index}>
+                  <a className='block cursor-pointer'>{item.name}</a>
+                </Link>
               ))}
             </ol>
           </div>
@@ -45,7 +50,9 @@ export default function Home({ restaurants, hotels, thingsToDo}) {
 
             <ol className='mt-4 list-inside list-decimal'>
               {thingsToDo.map((item, index) => (
-                <li key={index}>{item.name}</li>
+                <Link href={`/${item.id}`} key={index}>
+                  <a className='block cursor-pointer'>{item.name}</a>
+                </Link>
               ))}
             </ol>
           </div>
@@ -59,7 +66,7 @@ export default function Home({ restaurants, hotels, thingsToDo}) {
 
 
 export async function getServerSideProps() {
-  const restaurants = await getItems(prisma, 'restaurants')
+  const restaurants = await getItems(prisma, 'restaurant')
   const hotels = await getItems(prisma, 'hotel')
   const thingsToDo = await getItems(prisma, 'thing-to-do')
   console.log(thingsToDo)
